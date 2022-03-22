@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema(
   {
@@ -15,7 +15,8 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Please add a password'],
-    },
+      minLength: 8
+    }
   },
   {
     timestamps: true
