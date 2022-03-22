@@ -1,0 +1,21 @@
+{
+  "name": "todo-app-fullstack",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "author": "Andrew Southern",
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=6"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "format": "prettier --write",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "prettier": "2.6.0"
+
+  }
+}
