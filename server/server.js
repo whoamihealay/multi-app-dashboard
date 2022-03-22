@@ -9,10 +9,12 @@ const port = process.env.PORT | 8000
 connectDB()
 
 server.use(json())
-server.use(urlencoded({ extended: false}))
+server.use(urlencoded({ extended: false }))
 
-server.get('/', (req, res) => 
-  res.send("OK")
+server.use('/api/users', require('./routes/users/auth'))
+
+server.get('/', (req, res) => res.send('OK'))
+
+module.exports = server.listen(port, () =>
+  console.log(`server started on port: ${port}`)
 )
-
-module.exports = server.listen(port, () => console.log(`server started on port: ${port}`))
