@@ -82,7 +82,6 @@ const loginUser = async (req, res) => {
     throw new Error("Invalid username/password")
   }
 
-
   } catch (err) {
     console.log(err);
   }
