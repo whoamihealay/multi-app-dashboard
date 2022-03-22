@@ -2,3 +2,5 @@ node_modules/
 TODOs.md
 /.vscode/
 .DS_Store
+.env
+.env.local

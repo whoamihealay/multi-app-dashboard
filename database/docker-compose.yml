@@ -1,13 +1,9 @@
-version: '3.1'
+version: "3.1"
 
 services:
-  mongo:
-    image: mongo
+  mongo-dev:
+    image: mongo:latest
     restart: unless-stopped
-    ports: 
+    ports:
       - 27017:27017
-    environment:
-    # Change for production
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
 
