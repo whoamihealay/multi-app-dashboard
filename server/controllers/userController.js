@@ -8,12 +8,6 @@ const tokenExpireTime = '30d'
 // @route   POST /api/users/register
 // @access  Public
 const registerUser = async (req, res, next) => {
-  // Generate JWT
-  const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-      expiresIn: tokenExpireTime
-    })
-  }
 
   try {
     const { username, email, password } = req.body
@@ -61,14 +55,55 @@ const registerUser = async (req, res, next) => {
       throw new Error('Invalid user data')
     }
 
-    
   } catch (error) {
     console.log(error)
   }
+}
 
+// @desc    Login user
+// @route   POST /api/users/login
+// @access  Public
+const loginUser = async (req, res) => {
+  try {
+  const { username, password } = req.body
+
+  // check for username
+  const user = await User.findOne({username})
   
+  if (user && await bcrypt.compare(password, user.password)) {
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      token: generateToken(user._id)
+    })
+  } else {
+    res.status(400)
+    throw new Error("Invalid username/password")
+  }
+
+
+  } catch (err) {
+    console.log(err);
+  }
+} 
+
+// @desc    Get user data
+// @route   Get /api/users/me
+// @access  Private
+const getUser = async (req, res) => {
+  res.status(200).json(req.user)
+}
+
+// Generate JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: tokenExpireTime
+  })
 }
 
 module.exports = {
-  registerUser
+  registerUser,
+  loginUser,
+  getUser
 }
