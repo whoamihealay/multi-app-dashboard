@@ -8,15 +8,15 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import Header from './components/header/Header'
 import Router from './router'
 import { theme } from './themes/theme'
 
 axios.interceptors.request.use(async (config: AxiosRequestConfig) => {
-  const token = await localStorage.getItem('todo-token')
-  // @ts-ignore
-  config.headers['x-access-token'] = token
-
+  if (localStorage.getItem('user')) {
+    const user = JSON.parse(localStorage.getItem('user')!)
+    const token = user.token
+    config.headers!['x-access-token'] = token
+  }
   return config
 })
 
@@ -36,7 +36,6 @@ function App() {
     >
       <MantineProvider theme={{ ...theme, colorScheme }}>
         <BrowserRouter>
-          <Header />
           <Router />
         </BrowserRouter>
         <ToastContainer />

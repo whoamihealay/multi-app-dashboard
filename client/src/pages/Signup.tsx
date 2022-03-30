@@ -1,13 +1,19 @@
 import { Button, TextInput, PasswordInput } from '@mantine/core'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { At, Lock, User } from 'tabler-icons-react'
+import { IUser } from '../interfaces'
 import { credendials } from '../router'
 
 interface IProps {
   register: (credentials: credendials) => void
+  user: IUser
 }
 
-const Register = ({ register }: IProps) => {
+const Register = ({ user, register }: IProps) => {
+  const navigate = useNavigate()
+
   const handleRegister = async (event: {
     preventDefault: () => void
     currentTarget: any
@@ -27,9 +33,15 @@ const Register = ({ register }: IProps) => {
     if (password != confirmation) {
       toast.error('Passwords do not match !')
     } else {
-      register({ username, email, password })
+      await register({ username, email, password })
     }
   }
+
+  useEffect(() => {
+    if (user && user._id) {
+      navigate('/home')
+    }
+  }, [user, navigate])
 
   return (
     <>
@@ -69,7 +81,7 @@ const Register = ({ register }: IProps) => {
             icon={<Lock />}
             required
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Sign up</Button>
         </form>
       </section>
     </>

@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import { toast } from 'react-toastify'
-
-type User = {
-  _id?: string
-  isFetching?: boolean
-  error?: any
-}
+import Header from './components/header/Header'
+import { IUser } from './interfaces'
 
 export type credendials = {
   username: string
@@ -19,46 +15,67 @@ export type credendials = {
 }
 
 const Router = () => {
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<IUser>({
     isFetching: true
   })
+
+  const navigate = useNavigate()
 
   const register = async (credentials: credendials) => {
     try {
       const { data } = await axios.post('/auth/register', credentials)
-      await localStorage.setItem('todo-token', data.token)
       await localStorage.setItem('user', JSON.stringify(data))
       setUser(data)
+      if (user._id) {
+        navigate('/')
+      }
     } catch (error: any) {
       console.log(error)
-      setUser({ error: error.response.data.error || 'Server Error' })
+      setUser({
+        isFetching: false,
+        error: error.response.data.error || 'Server Error'
+      })
+    } finally {
+      if (user._id) {
+        navigate('/')
+      }
     }
   }
 
   const login = async (credentials: credendials) => {
     try {
       const { data } = await axios.post('/auth/login', credentials)
-      await localStorage.setItem('todo-token', data.token)
       await localStorage.setItem('user', JSON.stringify(data))
       setUser(data)
     } catch (error: any) {
       console.log(error)
-      setUser({ error: error.response.data.error || 'Server Error' })
+      setUser({
+        isFetching: false,
+        error: error.response.data.error || 'Server Error'
+      })
     }
+  }
+
+  const logout = () => {
+    localStorage.removeItem('user')
+    setUser({ isFetching: false })
   }
 
   useEffect(() => {
     const fetchUser = async () => {
       setUser((prev) => ({ ...prev, isFetching: true }))
       try {
-        const { data } = await axios.get('/auth/user')
-        setUser(data)
-      } catch (error) {
+        if (localStorage.getItem('user')) {
+          const { data } = await axios.get('/auth/user')
+          setUser(data)
+        }
+      } catch (error: any) {
         console.log(error)
       } finally {
         setUser((prev) => ({ ...prev, isFetching: false }))
       }
     }
+
     fetchUser()
   }, [])
 
@@ -72,17 +89,32 @@ const Router = () => {
     }
   }, [user.error])
 
-  return user.isFetching ? (
-    <div>Loading...</div>
-  ) : (
-    <Routes>
-      <Route path="/login" element={<Login login={login} />} />
-      <Route path="/signup" element={<Signup register={register} />} />
-      <Route
-        path="/"
-        element={user._id ? <Dashboard /> : <Login login={login} />}
-      />
-    </Routes>
+  return (
+    <>
+      <Header user={user} logout={logout} />
+      {user.isFetching ? (
+        <div>Loading...</div>
+      ) : (
+        <Routes>
+          <Route path="/login" element={<Login user={user} login={login} />} />
+          <Route
+            path="/signup"
+            element={<Signup user={user} register={register} />}
+          />
+          <Route
+            path="/"
+            element={
+              user?._id ? (
+                <Dashboard user={user} />
+              ) : (
+                <Login user={user} login={login} />
+              )
+            }
+          />
+          <Route path="/home" element={<Dashboard user={user} />} />
+        </Routes>
+      )}
+    </>
   )
 }
 

@@ -5,19 +5,25 @@ import { Button, TextInput, PasswordInput } from '@mantine/core'
 import { Lock, User } from 'tabler-icons-react'
 import { credendials } from '../router'
 import { toast } from 'react-toastify'
+import { IUser } from '../interfaces'
+import { useEffect } from 'react'
 
 interface IProps {
   login: (credentials: credendials) => void
+  user: IUser
 }
 
-const Login = ({ login }: IProps) => {
+const Login = ({ user, login }: IProps) => {
   const navigate = useNavigate()
 
   let isLoading = false
 
   let isDisabled = isLoading
 
-  const handleLogin = async (event) => {
+  const handleLogin = async (event: {
+    preventDefault: () => void
+    currentTarget: any
+  }) => {
     event.preventDefault()
     const form = event.currentTarget
     const formElements = form.elements
@@ -33,6 +39,12 @@ const Login = ({ login }: IProps) => {
       password
     })
   }
+
+  useEffect(() => {
+    if (user && user._id) {
+      navigate('/home')
+    }
+  }, [user, navigate])
 
   return (
     <>
@@ -58,7 +70,7 @@ const Login = ({ login }: IProps) => {
             disabled={isDisabled}
           />
           <Button type="submit" loading={isLoading}>
-            Submit
+            Login
           </Button>
         </form>
       </section>

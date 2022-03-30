@@ -1,10 +1,18 @@
 import { ActionIcon, Group, useMantineColorScheme } from '@mantine/core'
 import { Link } from 'react-router-dom'
-import { Sun, MoonStars } from 'tabler-icons-react'
+import { Sun, MoonStars, User } from 'tabler-icons-react'
+import { IUser } from '../../interfaces'
 
-const Header = () => {
+interface IProps {
+  logout: () => void
+  user: IUser
+}
+
+const Header = ({ user, logout }: IProps) => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const dark = colorScheme === 'dark'
+
+  const isLoggedIn = user && user._id ? true : false
 
   return (
     <Group position="apart">
@@ -18,8 +26,14 @@ const Header = () => {
       </ActionIcon>
       <Group>
         <Link to={'/'}>Home</Link>
-        <Link to={'/login'}>Login</Link>
-        <Link to={'/signup'}>Sign up</Link>
+        {isLoggedIn ? (
+          <button onClick={logout}>Logout</button>
+        ) : (
+          <>
+            <Link to={'/login'}>Login</Link>
+            <Link to={'/signup'}>Sign up</Link>
+          </>
+        )}
       </Group>
     </Group>
   )
