@@ -4,7 +4,7 @@ import asyncHandler from 'express-async-handler'
 import User from '../models/userModel'
 
 interface DataStoredInToken {
-  _id: string
+  id: string
 }
 
 const protect = asyncHandler(
@@ -20,7 +20,7 @@ const protect = asyncHandler(
             token,
             process.env.JWT_SECRET
           ) as DataStoredInToken
-          req.body.user = await User.findById(decoded._id).select('-password')
+          req.body.user = await User.findById(decoded.id).select('-password')
         }
 
         next()
