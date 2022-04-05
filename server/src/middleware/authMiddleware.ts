@@ -20,7 +20,13 @@ const protect = asyncHandler(
             token,
             process.env.JWT_SECRET
           ) as DataStoredInToken
-          req.body.user = await User.findById(decoded.id).select('-password')
+          const user = await User.findById(decoded.id).select('-password')
+
+          if (!user) {
+            res.status(401)
+            throw new Error('User not found')
+          }
+          req.body.user = user
         }
 
         next()
