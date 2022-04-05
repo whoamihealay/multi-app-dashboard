@@ -1,4 +1,4 @@
-import { ActionIcon, Group, useMantineColorScheme } from '@mantine/core'
+import { ActionIcon, Group, useMantineColorScheme, Text } from '@mantine/core'
 import { Link } from 'react-router-dom'
 import { Sun, MoonStars, User } from 'tabler-icons-react'
 import { IUser } from '../../interfaces'
@@ -22,9 +22,14 @@ const Header = ({ user, logout }: IProps) => {
         onClick={() => toggleColorScheme()}
         title="Toggle color scheme"
       >
-        {dark ? <Sun size={18} /> : <MoonStars size={18} />}
+        {dark ? (
+          <Sun aria-label="theme switcher" size={18} />
+        ) : (
+          <MoonStars aria-label="theme switcher" size={18} />
+        )}
       </ActionIcon>
-      <Group>
+      <Group position="center">
+        <Text>Hello, {user.username}</Text>
         <Link to={'/'}>Home</Link>
         {isLoggedIn ? (
           <button onClick={logout}>Logout</button>

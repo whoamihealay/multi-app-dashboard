@@ -43,6 +43,7 @@ const TodosItem = ({ todo, updateTodo, deleteTodo }: IProps) => {
       <CloseButton
         aria-label="Delete todo"
         title="Delete todo"
+        name="delete"
         size="lg"
         iconSize={20}
         onClick={() => deleteTodo(todo._id)}

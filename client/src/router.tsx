@@ -1,11 +1,16 @@
+// Packages
 import { useEffect, useState } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+
+// Components
+import Header from './components/header/Header'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import { toast } from 'react-toastify'
-import Header from './components/header/Header'
+
+// Interfaces
 import { IUser } from './interfaces'
 
 export type credendials = {
@@ -63,6 +68,8 @@ const Router = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
+      console.log('Called')
+
       setUser((prev) => ({ ...prev, isFetching: true }))
       try {
         if (localStorage.getItem('user')) {
@@ -79,7 +86,6 @@ const Router = () => {
         setUser((prev) => ({ ...prev, isFetching: false }))
       }
     }
-
     fetchUser()
   }, [])
 
@@ -108,7 +114,7 @@ const Router = () => {
           <Route
             path="/"
             element={
-              user?._id ? (
+              user._id ? (
                 <Dashboard user={user} />
               ) : (
                 <Login user={user} login={login} />
