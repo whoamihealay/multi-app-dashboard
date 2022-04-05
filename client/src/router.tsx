@@ -48,7 +48,7 @@ const Router = () => {
       await localStorage.setItem('user', JSON.stringify(data))
       setUser(data)
     } catch (error: any) {
-      console.log(error)
+      console.log(error.response.data.error)
       setUser({
         isFetching: false,
         error: error.response.data.error || 'Server Error'
@@ -70,7 +70,11 @@ const Router = () => {
           setUser(data)
         }
       } catch (error: any) {
-        console.log(error)
+        setUser({
+          isFetching: false,
+          error: error.response.data.error || 'Server Error'
+        })
+        localStorage.removeItem('user')
       } finally {
         setUser((prev) => ({ ...prev, isFetching: false }))
       }
