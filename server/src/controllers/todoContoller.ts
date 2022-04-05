@@ -58,8 +58,8 @@ const updateTodo = asyncHandler(async (req, res, next) => {
     }
 
     const updatedTodo = await Todo.findOneAndUpdate(
-      req.body.user.id,
-      req.body,
+      { _id: req.params.id },
+      req.body.todo,
       {
         new: true
       }
