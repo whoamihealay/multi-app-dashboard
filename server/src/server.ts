@@ -15,6 +15,7 @@ server.use(urlencoded({ extended: false }))
 server.use(cors())
 
 server.use('/auth', require('./routes/auth'))
+server.use('/api/todos', require('./routes/todos'))
 
 server.get('/health', (req: Request, res: Response): void => {
   res.send('OK')
