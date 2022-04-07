@@ -34,28 +34,37 @@ jobs:
         run: docker run -d -p 27017:27017 -e MONGO_INITDB=database-ci -e MONGO_INITDB_ROOT_USERNAME=mongo -e MONGO_INITDB_ROOT_PASSWORD=jacfweio mongo
 
       - name: Install server deps
+        id: server-deps
         working-directory: server
         run: npm install
 
       - name: Start server in the background
+        id: server-start
         working-directory: server
         run: npm run start &
+        if: steps.server-deps.outcome == 'success'
 
       - name: Install client deps
+        id: client-deps
         working-directory: client
         run: npm install
 
       - name: Build client
+        id: client-build
         working-directory: client
         run: npm run build
+        if: steps.client-deps.outcome == 'success'
 
       - name: Start client in the background
+        id: client-start
         working-directory: client
         run: npm run preview &
+        if: steps.build-deps.outcome == 'success'
 
       - name: Cypress
         working-directory: client
         run: npx cypress run
+        if: steps.server-start.outcome == 'success' && steps.client-start.outcome == 'success'
 
       - name: Save screenshots
         uses: actions/upload-artifact@v2
