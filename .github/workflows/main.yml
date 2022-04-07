@@ -46,7 +46,7 @@ jobs:
 
       - name: Build client
         working-directory: client
-        run: npm run Build
+        run: npm run build
 
       - name: Start client in the background
         working-directory: client
