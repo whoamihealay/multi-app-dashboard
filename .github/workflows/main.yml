@@ -33,14 +33,14 @@ jobs:
       - name: Spawn database
         run: docker run -d -p 27017:27017 -e MONGO_INITDB=database-ci -e MONGO_INITDB_ROOT_USERNAME=mongo -e MONGO_INITDB_ROOT_PASSWORD=jacfweio mongo
 
-      - name: Install server deps
-        id: server-deps
-        working-directory: server
-        run: npm install
-
       - name: Install client deps
         id: client-deps
         working-directory: client
+        run: npm install
+
+      - name: Install server deps
+        id: server-deps
+        working-directory: server
         run: npm install
 
       - name: Build client
