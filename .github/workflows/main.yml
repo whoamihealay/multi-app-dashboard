@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [main]
 env:
+  NODE_ENV: production
   DATABASE_URI: mongodb://mongo:jacfweio@localhost:27017
   DATABASE_NAME: database-ci
   JWT_SECRET: supersecret
