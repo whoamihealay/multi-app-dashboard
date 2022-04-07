@@ -21,7 +21,7 @@ jobs:
           node-version: "16"
 
       - name: Spawn database
-        run: docker run -d -p 27017:27017 -e MONGO_INITDB=database-ci -e MONGO_INITDB_ROOT_USERNAME=mongo -e MONGO_INITDB_ROOT_PASSWORD=jacfweio mongo
+        run: docker run -d -p 27017:27017 --name database-ci -e MONGO_INITDB=database-ci -e MONGO_INITDB_ROOT_USERNAME=mongo -e MONGO_INITDB_ROOT_PASSWORD=jacfweio mongo
 
       - name: Install client deps
         working-directory: client
@@ -54,3 +54,9 @@ jobs:
         with:
           name: cypress-videos
           path: client/cypress/videos
+
+      - name: clear database
+        run: docker stop database-ci
+
+      - name: delete database
+        run: docker rm database-ci
