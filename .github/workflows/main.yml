@@ -38,12 +38,6 @@ jobs:
         working-directory: server
         run: npm install
 
-      - name: Start server in the background
-        id: server-start
-        working-directory: server
-        run: npm run start &
-        if: steps.server-deps.outcome == 'success'
-
       - name: Install client deps
         id: client-deps
         working-directory: client
@@ -54,6 +48,12 @@ jobs:
         working-directory: client
         run: npm run build
         if: steps.client-deps.outcome == 'success'
+
+      - name: Start server in the background
+        id: server-start
+        working-directory: server
+        run: npm run start &
+        if: steps.server-deps.outcome == 'success'
 
       - name: Start client in the background
         id: client-start
