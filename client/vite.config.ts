@@ -13,5 +13,9 @@ export default defineConfig({
         target: 'http://localhost:8000'
       }
     }
+  },
+  build: {
+    target: 'ES2016',
+    minify: true
   }
 })
